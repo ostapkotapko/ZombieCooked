@@ -1,14 +1,46 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System;
 
 public class Player : MonoBehaviour
 {
+    public static Player Instance { get; private set; }
+
+    public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
+    public class OnSelectedCounterChangedEventArgs : EventArgs
+    {
+        public ClearCounter selectedCounter;
+    }
+
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private GameInput gameInput;
     [SerializeField] private LayerMask counterLayerMask;
 
     private bool isWalking;
     private Vector3 lastInteractDir;
+    private ClearCounter selectedCounter;
+
+
+    private void Awake()
+    {
+        if(Instance != null)
+        {
+            Debug.LogError("Here more than one Player!");
+        }
+        Instance = this;
+    }
+    private void Start()
+    {
+        gameInput.OnInteractAction += GameInput_OnInteractAction;
+    }
+
+    private void GameInput_OnInteractAction(object sender, System.EventArgs e)
+    {
+        if(selectedCounter != null)
+        {
+            selectedCounter.Interact();
+        }
+    }
 
     void Update()
     {
@@ -87,11 +119,19 @@ public class Player : MonoBehaviour
         }
         if (Physics.Raycast(transform.position, lastInteractDir, out RaycastHit raycastHit, interactionDistance, counterLayerMask))
         {
-            if(raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
+            if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
             {
                 //Have ClearCounter
-                clearCounter.Interact();
+                if (clearCounter != selectedCounter) SetSelectedCounter(clearCounter);
             }
+            else SetSelectedCounter(null);
+            }
+        else SetSelectedCounter(null);
         }
+
+    private void SetSelectedCounter(ClearCounter selectedCounter)
+    {
+        this.selectedCounter = selectedCounter;
+        OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs { selectedCounter = selectedCounter });
     }
 }
