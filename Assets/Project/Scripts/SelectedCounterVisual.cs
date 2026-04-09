@@ -13,14 +13,14 @@ public class SelectedCounterVisual : MonoBehaviour
     {
         if(e.selectedCounter == thisBaseCounter)
         {
-            foreach (GameObject visualGameObject in visualGameObjectArray)
+            foreach(GameObject visualGameObject in visualGameObjectArray)
             {
                 Show(visualGameObject);
             }
         }
         else
         {
-            foreach (GameObject visualGameObject in visualGameObjectArray)
+            foreach(GameObject visualGameObject in visualGameObjectArray)
             {
                 Hide(visualGameObject);
             }

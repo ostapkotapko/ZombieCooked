@@ -3,9 +3,9 @@ using System;
 
 public class ConteinerCounter : BaseCounter
 {
-    public event EventHandler OnPlayerGrabObject;
-
     [SerializeField] private KitchenObjectSO kitchenObjectSO;
+
+    public event EventHandler OnPlayerGrabObject;
 
     public override void Interact(Player player)
     {

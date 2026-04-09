@@ -28,6 +28,8 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         if(Instance != null)
         {
             Debug.LogError("Here more than one Player!");
+            Destroy(this);
+            return;
         }
         Instance = this;
     }
@@ -44,7 +46,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         }
     }
 
-    void Update()
+    private void Update()
     {
         HandleMovement();
         HandleInteractions();
@@ -67,14 +69,14 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         bool canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDir, moveDistance);
 
 
-        if (!canMove)
+        if(!canMove)
         {
             //Cannot move towards moveDir
             //Attempt only X movement
             Vector3 moveDirX = new Vector3(moveDir.x, 0f, 0f).normalized;
             canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirX, moveDistance);
 
-            if (canMove)
+            if(canMove)
             {
                 //Can move only X direction
                 moveDir = moveDirX;
@@ -86,7 +88,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
                 Vector3 moveDirZ = new Vector3(0f, 0f, moveDir.z).normalized;
                 canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirZ, moveDistance);
 
-                if (canMove)
+                if(canMove)
                 {
                     //Can move only Z direction
                     moveDir = moveDirZ;
@@ -97,7 +99,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
                 }
             }
         }
-        if (canMove)
+        if(canMove)
         {
             transform.position += moveDir * moveDistance;
         }
@@ -115,16 +117,16 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
 
         float interactionDistance = 2f;
-        if (moveDir != Vector3.zero)
+        if(moveDir != Vector3.zero)
         {
             lastInteractDir = moveDir;
         }
-        if (Physics.Raycast(transform.position, lastInteractDir, out RaycastHit raycastHit, interactionDistance, counterLayerMask))
+        if(Physics.Raycast(transform.position, lastInteractDir, out RaycastHit raycastHit, interactionDistance, counterLayerMask))
         {
-            if (raycastHit.transform.TryGetComponent(out BaseCounter baseCounter))
+            if(raycastHit.transform.TryGetComponent(out BaseCounter baseCounter))
             {
                 //Have ClearCounter
-                if (baseCounter != selectedCounter) SetSelectedCounter(baseCounter);
+                if(baseCounter != selectedCounter) SetSelectedCounter(baseCounter);
             }
             else SetSelectedCounter(null);
             }
