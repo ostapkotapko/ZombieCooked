@@ -19,7 +19,7 @@ ZombieCooked is a Casual cooking where you're cooking with zombies who are getti
 ## 🗺️ Roadmap & Progress
 - [x] Basic player controller (Movement, Interact)
 - [x] Collisions detected
-- [/] Counters logic (50%)
+- [ ] Counters logic *(In progress - 50%)*
 - [ ] Pick up & drop objects
 - [ ] Cooking processes
 - [ ] Orders and delivery
