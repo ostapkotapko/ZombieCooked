@@ -26,10 +26,13 @@ public class CuttingCounter : BaseCounter
 
                 CuttingRecipeSO cuttingRecipeSO = GetCuttingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());
 
-                OnProgressChanged?.Invoke(this, new OnProgressChangedEventArgs
+                if(GetCuttingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO()) != null)
                 {
-                    progressNormalized = (float)cuttingProgress / cuttingRecipeSO.cuttingProgressMax
-                });
+                    OnProgressChanged?.Invoke(this, new OnProgressChangedEventArgs
+                    {
+                        progressNormalized = (float)cuttingProgress / cuttingRecipeSO.cuttingProgressMax
+                    });
+                } 
             }
             else
             {
@@ -53,22 +56,25 @@ public class CuttingCounter : BaseCounter
     {
         if(HasKitchenObject() && GetOutputForInput(GetKitchenObject().GetKitchenObjectSO()) != null)
         {
-            cuttingProgress++;
-
-            OnCut?.Invoke(this, EventArgs.Empty);
-
-            CuttingRecipeSO cuttingRecipeSO = GetCuttingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());
-            OnProgressChanged?.Invoke(this, new OnProgressChangedEventArgs
+            if(GetCuttingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO()) != null)
             {
-                progressNormalized = (float)cuttingProgress / cuttingRecipeSO.cuttingProgressMax
-            });
+                cuttingProgress++;
 
-            if(cuttingProgress >= cuttingRecipeSO.cuttingProgressMax)
-            {
-                KitchenObjectSO outputKitchenObjectSO = GetOutputForInput(GetKitchenObject().GetKitchenObjectSO());
-                GetKitchenObject().DestroySelf();
+                OnCut?.Invoke(this, EventArgs.Empty);
 
-                KitchenObject.SpawnKitchenObject(outputKitchenObjectSO, this);
+                CuttingRecipeSO cuttingRecipeSO = GetCuttingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());
+                OnProgressChanged?.Invoke(this, new OnProgressChangedEventArgs
+                {
+                    progressNormalized = (float)cuttingProgress / cuttingRecipeSO.cuttingProgressMax
+                });
+
+                if(cuttingProgress >= cuttingRecipeSO.cuttingProgressMax)
+                {
+                    KitchenObjectSO outputKitchenObjectSO = GetOutputForInput(GetKitchenObject().GetKitchenObjectSO());
+                    GetKitchenObject().DestroySelf();
+
+                    KitchenObject.SpawnKitchenObject(outputKitchenObjectSO, this);
+                }
             }
         }
     }
